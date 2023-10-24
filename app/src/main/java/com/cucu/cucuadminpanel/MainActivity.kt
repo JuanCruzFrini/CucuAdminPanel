@@ -4,11 +4,13 @@ import android.os.Bundle
 import android.os.Parcelable
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -22,6 +24,7 @@ import com.cucu.cucuadminpanel.data.models.Product
 import com.cucu.cucuadminpanel.data.models.promo.Promo
 import com.cucu.cucuadminpanel.data.models.purchase.PurchaseReference
 import com.cucu.cucuadminpanel.presentation.MainScreen
+import com.cucu.cucuadminpanel.presentation.home.viewmodel.HomeViewModel
 import com.cucu.cucuadminpanel.presentation.navdrawer.NavDrawerDestinationsController
 import com.cucu.cucuadminpanel.presentation.navdrawer.promos.ChoosePromoProductsScreen
 import com.cucu.cucuadminpanel.presentation.navdrawer.promos.add.AddPromoScreen
@@ -43,17 +46,16 @@ class MainActivity : ComponentActivity() {
         Routes.Discounts.route,
         Routes.Stats.route)
 
-    //private val viewModel by viewModels<HomeViewModel>()
+    private val viewModel by viewModels<HomeViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        /*installSplashScreen().apply {
+        installSplashScreen().apply {
             viewModel.getAllProducts()
             setKeepOnScreenCondition { viewModel.isLoading.value }
-        }*/
+        }
         setContent {
             CucuAdminPanelTheme {
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
