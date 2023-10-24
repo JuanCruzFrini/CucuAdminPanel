@@ -6,9 +6,7 @@ import android.net.Uri
 import com.cucu.cucuadminpanel.application.Constants
 import com.cucu.cucuadminpanel.application.getBitmapFromUri
 import com.cucu.cucuadminpanel.data.models.Product
-import com.cucu.cucuadminpanel.data.models.items.ItemCategory
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.tasks.await
@@ -84,7 +82,7 @@ class ProductsDataSource @Inject constructor(
         }
     }
 
-    suspend fun getCategories(): List<ItemCategory> {
+    /*suspend fun getCategories(): List<ItemCategory> {
         val categories = mutableListOf<ItemCategory>()
 
         val fetch = db.collection(Constants.CATEGORIES_COLL)
@@ -98,7 +96,7 @@ class ProductsDataSource @Inject constructor(
         }
 
         return categories
-    }
+    }*/
 
     suspend fun updateProduct(product: Product) {
         product.id?.let { id ->
@@ -115,16 +113,6 @@ class ProductsDataSource @Inject constructor(
                         "code" to product.code,
                     )
                 ).await()
-        }
-    }
-
-    suspend fun increaseSeenTimes(product: Product){
-        product.id?.let { id ->
-                val newSeenTimes = product.seenTimes?.plus(1)
-
-                db.collection(Constants.PRODUCTS_COLL)
-                    .document(id)
-                    .update("seenTimes", newSeenTimes).await()
         }
     }
 }

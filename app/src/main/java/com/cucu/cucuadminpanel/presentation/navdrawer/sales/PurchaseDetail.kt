@@ -57,7 +57,7 @@ import com.cucu.cucuadminpanel.data.models.cart.CartProduct
 import com.cucu.cucuadminpanel.data.models.purchase.Purchase
 import com.cucu.cucuadminpanel.data.models.purchase.PurchaseReference
 import com.cucu.cucuadminpanel.data.models.purchase.PurchaseState
-import com.cucu.cucuadminpanel.presentation.add.TextFieldCommon
+import com.cucu.cucuadminpanel.presentation.products.add.TextFieldCommon
 import com.cucu.cucuadminpanel.ui.theme.Purple40
 import com.cucu.cucuadminpanel.ui.theme.Purple80
 import com.cucu.cucuadminpanel.ui.theme.PurpleGrey80

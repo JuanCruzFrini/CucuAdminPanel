@@ -1,4 +1,4 @@
-package com.cucu.cucuadminpanel.presentation.add
+package com.cucu.cucuadminpanel.presentation.products.add
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -42,11 +42,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.cucu.cucuadminpanel.R
-import com.cucu.cucuadminpanel.data.fakedatasources.FakeDataSource
 import com.cucu.cucuadminpanel.data.models.Product
 import com.cucu.cucuadminpanel.data.models.items.ItemCategory
-import com.cucu.cucuadminpanel.presentation.detail.view.FabIcon
-import com.cucu.cucuadminpanel.presentation.detail.view.TopBarNavigateBack
+import com.cucu.cucuadminpanel.presentation.products.detail.view.FabIcon
+import com.cucu.cucuadminpanel.presentation.products.detail.view.TopBarNavigateBack
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -73,7 +72,7 @@ fun AddScreen(
     }
 
     Scaffold(
-        topBar = { TopBarNavigateBack(navController)},
+        topBar = { TopBarNavigateBack(navController) },
         floatingActionButton = {
             FabIcon(
                 icon = Icons.Rounded.Check,
@@ -110,7 +109,10 @@ fun AddScreen(
                     contentDescription = null,
                     error = painterResource(id = R.drawable.ic_launcher_foreground),
                     placeholder = painterResource(id = R.drawable.ic_launcher_background),
-                    modifier = Modifier.fillMaxWidth().height(300.dp).clickable { getImage = true }
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(300.dp)
+                        .clickable { getImage = true }
                 )
 
                 TextFieldCommon(
@@ -134,7 +136,7 @@ fun AddScreen(
                     onValueChange = { code = it}
                 )
 
-                SpinnerCountries{ category = it }
+                SpinnerCountries(viewModel.getCountries(), "Categoria"){ category = it }
 
                 TextFieldCommon(label = "Descripcion", onValueChange = { description = it })
             }
@@ -144,24 +146,27 @@ fun AddScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SpinnerCountries(value: String? = "", onSelectedCategory:(String)->Unit) {
+fun SpinnerCountries(
+    list: List<String>,
+    label: String,
+    value: String? = "",
+    onSelectedCategory: (String) -> Unit
+) {
     var selectedText by remember { mutableStateOf(value ?: "") }
     var isExpanded by remember { mutableStateOf(false) }
-
-   val categories = FakeDataSource().categoriesStringList()
 
     Column {
         OutlinedTextField(
             value = selectedText,
             onValueChange = { selectedText = it },
-            label = { Text(text = "Categoria") },
+            label = { Text(text = label) },
             enabled = false,
             readOnly = true,
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable { isExpanded = true })
         DropdownMenu(expanded = isExpanded, onDismissRequest = { isExpanded = false }) {
-            categories.forEach {
+            list.forEach {
                 DropdownMenuItem(text = { Text(text = it) }, onClick = {
                     isExpanded = false
                     selectedText = it

@@ -17,7 +17,6 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     /*private val getAllProducts: GetAllProductsUseCase,*/
     private val repository: Repository
-    //private val fakeDataSource: FakeDataSource
 ) : ViewModel() {
 
     private val _isLoading: MutableStateFlow<Boolean> = MutableStateFlow(true)
@@ -30,8 +29,7 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             _isLoading.value = true
             try {
-                //val list = getAllProducts.invoke()
-                _productsList.postValue(repository.getAllProducts()/*list*/)
+                _productsList.postValue(repository.getAllProducts())
                 _isLoading.value = false
             } catch (e: Exception) {
                 Log.e("Error", e.message.toString())
@@ -39,18 +37,4 @@ class HomeViewModel @Inject constructor(
             }
         }
     }
-
-/*
-    fun getPurchasesRefs(){
-        viewModelScope.launch {
-            try {
-                val purchasesRefs = repository.getPurchases()
-                //_productsList.postValue(list)
-                Log.d("purchases", purchasesRefs.toString())
-            } catch (e: Exception) {
-                Log.e("Error", e.message.toString())
-            }
-        }
-    }
-*/
 }

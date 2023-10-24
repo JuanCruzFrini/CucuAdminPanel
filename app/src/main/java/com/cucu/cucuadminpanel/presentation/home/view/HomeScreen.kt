@@ -71,14 +71,20 @@ fun ProductsList(
     viewModel.productsList.observeAsState().value?.let { list ->
         LazyColumn{
             items(list, key = { it.id!! }){
-                ProductItem(it, navController)
+                ProductItem(it){
+                    navController.currentBackStackEntry?.savedStateHandle?.set(
+                        key = "product",
+                        value = it
+                    )
+                    navController.navigate(Routes.ProductDetail.createRoute(it))
+                }
             }
         }
     }
 }
 
 @Composable
-fun ProductItem(product: Product, navController: NavHostController? = null) {
+fun ProductItem(product: Product, onClick:(Product) -> Unit) {
     Card(
         elevation = CardDefaults.cardElevation(2.dp),
         shape = RoundedCornerShape(20.dp),
@@ -86,13 +92,7 @@ fun ProductItem(product: Product, navController: NavHostController? = null) {
             .padding(horizontal = 16.dp, vertical = 8.dp)
             .fillMaxWidth()
             .height(150.dp)
-            .clickable {
-                navController?.currentBackStackEntry?.savedStateHandle?.set(
-                    key = "product",
-                    value = product
-                )
-                navController?.navigate(Routes.ProductDetail.createRoute(product))
-            }
+            .clickable { onClick(product) }
     ) {
         Row {
             AsyncImage(

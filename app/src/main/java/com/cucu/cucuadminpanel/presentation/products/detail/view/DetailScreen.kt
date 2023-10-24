@@ -1,4 +1,4 @@
-package com.cucu.cucuadminpanel.presentation.detail.view
+package com.cucu.cucuadminpanel.presentation.products.detail.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -52,7 +52,7 @@ import com.cucu.cucuadminpanel.application.calculateDiscountPercent
 import com.cucu.cucuadminpanel.application.firstCharToUpperCase
 import com.cucu.cucuadminpanel.application.textWithLineThrough
 import com.cucu.cucuadminpanel.data.models.Product
-import com.cucu.cucuadminpanel.presentation.detail.viewmodel.DetailViewModel
+import com.cucu.cucuadminpanel.presentation.products.detail.viewmodel.DetailViewModel
 import com.cucu.cucuadminpanel.ui.theme.Purple40
 import com.cucu.cucuadminpanel.ui.theme.Purple80
 import kotlinx.coroutines.launch
@@ -112,10 +112,13 @@ fun TopBarNavigateBack(mainNavController: NavHostController) {
     val checkRoute = when (mainNavController.currentDestination?.route){
         Routes.ProductDetail.route -> "Detail"
         Routes.PurchaseDetail.route -> "Purchase"
+        Routes.PromoDetail.route -> "Promotion"
         Routes.Category.route -> "Category"
         Routes.AddProduct.route -> "New Product"
         Routes.AddPromo.route -> "New Promo"
         Routes.EditProduct.route -> "Edit Product"
+        Routes.EditPromo.route -> "Edit Promotion"
+        Routes.ChoosePromoProducts.route -> "Add Product"
         else -> { mainNavController.currentDestination?.route?.firstCharToUpperCase() }
     }
 
@@ -150,9 +153,7 @@ fun DetailContent(
             .verticalScroll(state = rememberScrollState())) {
 
         Text(text = product.name.toString(),
-            Modifier
-                .fillMaxWidth()
-                .padding(16.dp))
+            Modifier.fillMaxWidth().padding(16.dp))
 
         AsyncImage(
             model = product.img,
@@ -160,9 +161,7 @@ fun DetailContent(
             contentDescription = null,
             error = painterResource(id = R.drawable.ic_launcher_foreground),
             placeholder = painterResource(id = R.drawable.ic_launcher_background),
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(300.dp)
+            modifier = Modifier.fillMaxWidth().height(300.dp)
         )
         StatsBlock(product)
 
@@ -231,7 +230,7 @@ fun PriceBlock(product: Product?) {
             Row(
                 Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically
             ) {
-                TextPrice(product)
+                TextPrice(product.newPrice?.roundToInt().toString())
                 Text(
                     modifier = Modifier.padding(horizontal = 8.dp),
                     text = "${calculateDiscountPercent(product)}% OFF",
@@ -241,14 +240,14 @@ fun PriceBlock(product: Product?) {
             }
         }
     } else {
-        TextPrice(product)
+        TextPrice(product?.newPrice?.roundToInt().toString())
     }
 }
 
 @Composable
-fun TextPrice(product:Product?) {
+fun TextPrice(price:String) {
     Text(
-        text = "$" + product?.newPrice?.roundToInt().toString(),
+        text = "$${price}",
         fontSize = 32.sp,
         fontWeight = FontWeight.SemiBold
     )

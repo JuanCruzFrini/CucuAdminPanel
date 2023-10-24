@@ -1,4 +1,4 @@
-package com.cucu.cucuadminpanel.presentation.edit
+package com.cucu.cucuadminpanel.presentation.products.edit
 
 import android.net.Uri
 import androidx.compose.foundation.clickable
@@ -36,12 +36,12 @@ import com.cucu.cucuadminpanel.R
 import com.cucu.cucuadminpanel.application.Routes
 import com.cucu.cucuadminpanel.data.models.Product
 import com.cucu.cucuadminpanel.data.models.items.ItemCategory
-import com.cucu.cucuadminpanel.presentation.add.PickImageFromGallery
-import com.cucu.cucuadminpanel.presentation.add.SpinnerCountries
-import com.cucu.cucuadminpanel.presentation.add.TextFieldCommon
-import com.cucu.cucuadminpanel.presentation.detail.view.FabIcon
-import com.cucu.cucuadminpanel.presentation.detail.view.TopBarNavigateBack
-import com.cucu.cucuadminpanel.presentation.detail.viewmodel.DetailViewModel
+import com.cucu.cucuadminpanel.presentation.products.add.PickImageFromGallery
+import com.cucu.cucuadminpanel.presentation.products.add.SpinnerCountries
+import com.cucu.cucuadminpanel.presentation.products.add.TextFieldCommon
+import com.cucu.cucuadminpanel.presentation.products.detail.view.FabIcon
+import com.cucu.cucuadminpanel.presentation.products.detail.view.TopBarNavigateBack
+import com.cucu.cucuadminpanel.presentation.products.detail.viewmodel.DetailViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -149,7 +149,7 @@ fun EditScreen(
                     onValueChange = { code = it}
                 )
 
-                SpinnerCountries(value = category){ category = it }
+                SpinnerCountries(viewModel.getCategories(), "Categoria", category){ category = it }
 
                 TextFieldCommon(value = description, label = "Descripcion", onValueChange = { description = it })
             }

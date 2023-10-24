@@ -69,11 +69,11 @@ fun PromoItem(promo: Promo, navController: NavHostController) {
                 .padding(horizontal = 16.dp)
                 .fillMaxWidth()
                 .clickable {
-                    navController?.currentBackStackEntry?.savedStateHandle?.set(
+                    navController.currentBackStackEntry?.savedStateHandle?.set(
                         key = "promotion",
                         value = promo
                     )
-                    navController?.navigate(Routes.PromoDetail.createRoute(promo))
+                    navController.navigate(Routes.PromoDetail.createRoute(promo))
                 }
         ) {
             LazyRow(
@@ -84,7 +84,7 @@ fun PromoItem(promo: Promo, navController: NavHostController) {
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                items(products.take(take)){ PromoProductsItem(it) }
+                items(products.take(take)){ PromoProductsItem(it){} }
 
                 if (products.size > 3){
                     item {
@@ -96,13 +96,17 @@ fun PromoItem(promo: Promo, navController: NavHostController) {
             Divider(color = Purple80)
 
             Text(
-                modifier = Modifier.fillMaxWidth().padding(8.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
                 text = promo.description.toString(),
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis
             )
             Text(
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp),
                 text = "$" + promo.price.toString(),
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 28.sp,
@@ -113,45 +117,57 @@ fun PromoItem(promo: Promo, navController: NavHostController) {
 }
 
 @Composable
-fun PromoProductsItem(product: CartProduct) {
+fun PromoProductsItem(product: CartProduct, isEditMode: Boolean = false, onRemoveProduct:(String)-> Unit) {
     Surface(shadowElevation = 2.dp, shape = RoundedCornerShape(20.dp)) {
-        Column(
-            verticalArrangement = Arrangement.Top,
-            modifier = Modifier
-                .size(100.dp, height = 120.dp)
-                .background(Purple80.copy(0.3f), RoundedCornerShape(20.dp))
-        ) {
-            Box(contentAlignment = Alignment.BottomEnd) {
-                AsyncImage(
-                    modifier = Modifier
-                        .height(80.dp)
-                        .width(100.dp)
-                        .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
-                        .background(Color.Black),
-                    model = product.product.img, contentDescription = "")
-                Text(
-                    text = product.quantity.toString(),
-                    color = Color.Black,
-                    fontWeight = FontWeight.SemiBold,
-                    modifier = Modifier
-                        .background(
-                            color = Color.White,
-                            shape = RoundedCornerShape(
-                                topStart = 8.dp,
-                                topEnd = 8.dp,
-                                bottomStart = 8.dp
-                            )
-                        ).padding(8.dp)
-                )
-            }
-            Text(
+            Column(
+                verticalArrangement = Arrangement.Top,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp),
-                textAlign = TextAlign.Center,
-                text = product.product.name.toString(),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis)
-        }
+                    .size(100.dp, height = 120.dp)
+                    .background(Purple80.copy(0.3f), RoundedCornerShape(20.dp))
+            ) {
+                Box() {
+                    AsyncImage(
+                        modifier = Modifier.height(80.dp).width(100.dp)
+                            .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
+                            .background(Color.Black),
+                        model = product.product.img, contentDescription = "")
+                    if (isEditMode){
+                        Text(
+                            text = "X",
+                            color = Color.Red,
+                            fontWeight = FontWeight.SemiBold,
+                            modifier = Modifier.align(Alignment.TopStart)
+                                .background(
+                                    color = Color.White,
+                                    shape = RoundedCornerShape(topStart = 8.dp, bottomEnd = 8.dp)
+                                )
+                                .padding(8.dp)
+                                .clickable { onRemoveProduct(product.product.id!!) }
+                        )
+                    }
+                    Text(
+                        text = product.quantity.toString(),
+                        color = Color.Black,
+                        fontWeight = FontWeight.SemiBold,
+                        modifier = Modifier.align(Alignment.BottomEnd)
+                            .background(
+                                color = Color.White,
+                                shape = RoundedCornerShape(
+                                    topStart = 8.dp,
+                                    topEnd = 8.dp,
+                                    bottomStart = 8.dp
+                                )
+                            ).padding(8.dp)
+                    )
+                }
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    textAlign = TextAlign.Center,
+                    text = product.product.name.toString(),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis)
+            }
     }
 }

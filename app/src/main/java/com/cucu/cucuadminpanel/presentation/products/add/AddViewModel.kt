@@ -1,4 +1,4 @@
-package com.cucu.cucuadminpanel.presentation.add
+package com.cucu.cucuadminpanel.presentation.products.add
 
 import android.net.Uri
 import android.util.Log
@@ -24,4 +24,7 @@ class AddViewModel @Inject constructor(
             }
         }
     }
+
+    fun getCountries(): List<String> = repository.getCategories()
+
 }
