@@ -25,7 +25,6 @@ sealed class Routes(val route:String) {
     }
 
     object Sales: Routes("sales")
-    object Combos: Routes("combos")
     object Stats: Routes("stats")
     object Discounts: Routes("discounts")
 
@@ -36,7 +35,6 @@ sealed class Routes(val route:String) {
         fun createRoute(promo: Promo) = "add_promo/${Uri.encode(Json.encodeToJsonElement(promo).toString())}"
     }
 
-    //object ChoosePromoProducts: Routes("choose_promo_products")
     object PromoDetail: Routes("promo_detail/{promotion}"){
         fun createRoute(promo: Promo) = "promo_detail/${Uri.encode(Json.encodeToJsonElement(promo).toString())}"
     }
@@ -47,14 +45,6 @@ sealed class Routes(val route:String) {
         fun createRoute(promotion: Promo) = "choose_promo_products/${Uri.encode(Json.encodeToJsonElement(promotion).toString())}"
     }
 
-
-    /*object PurchaseDetail:Routes("purchase_detail/{purchase}"){
-        fun createRoute(purchase: Purchase) = "purchase_detail/${Uri.encode(Json.encodeToJsonElement(purchase).toString())}"
-    }*/
-
-    /*object PurchaseDetail: Routes("purchase_detail/{purchaseId}"){
-        fun createRoute(purchaseId: String) = "purchase_detail/$purchaseId"
-    }*/
 
     object PurchaseDetail: Routes("purchase_detail/{purchaseReference}"){
         fun createRoute(purchaseReference: PurchaseReference) = "purchase_detail/${Uri.encode(Json.encodeToJsonElement(purchaseReference).toString())}"

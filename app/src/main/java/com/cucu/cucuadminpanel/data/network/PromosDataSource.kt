@@ -44,4 +44,19 @@ class PromosDataSource @Inject constructor(
             ).await()
         }
     }
+
+    suspend fun deletePromo(promoId: String?): Boolean {
+        var result = false
+
+        promoId?.let { id ->
+            result = try {
+                val task = db.collection(Constants.PROMOS_COLL).document(id).delete()
+                task.await()
+                task.isSuccessful
+            } catch (e:Exception){
+                false
+            }
+        }
+        return result
+    }
 }

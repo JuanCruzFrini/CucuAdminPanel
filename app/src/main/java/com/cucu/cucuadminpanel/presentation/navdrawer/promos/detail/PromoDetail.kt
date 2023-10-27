@@ -37,7 +37,7 @@ fun PromoDetail(promo: Promo?, navController: NavHostController) {
 
     Scaffold(
         Modifier.fillMaxSize(),
-        topBar = { TopBarNavigateBack(navController) },
+        topBar = { TopBarNavigateBack(navController){} },
         floatingActionButton = { FabIcon(
             onClick = {
                 promo?.let {

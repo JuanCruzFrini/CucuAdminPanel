@@ -1,7 +1,9 @@
 package com.cucu.cucuadminpanel.presentation.navdrawer.promos.edit
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,10 +27,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -37,6 +41,7 @@ import com.cucu.cucuadminpanel.application.Routes
 import com.cucu.cucuadminpanel.data.models.cart.CartProduct
 import com.cucu.cucuadminpanel.data.models.promo.Promo
 import com.cucu.cucuadminpanel.presentation.navdrawer.promos.PromoProductsItem
+import com.cucu.cucuadminpanel.presentation.products.add.Progress
 import com.cucu.cucuadminpanel.presentation.products.add.TextFieldCommon
 import com.cucu.cucuadminpanel.presentation.products.detail.view.FabIcon
 import com.cucu.cucuadminpanel.presentation.products.detail.view.TopBarNavigateBack
@@ -52,6 +57,16 @@ fun EditPromoScreen(
     viewModel:EditPromoViewModel = hiltViewModel()
 ) {
     promo?.let { viewModel.setPromotion(it) }
+    val context = LocalContext.current
+
+    val succeedDelete by rememberUpdatedState(newValue = viewModel.succeedDelete)
+    val isDeleting = viewModel.isDeleting
+
+    if (succeedDelete){
+        Toast.makeText(context, "Promocion eliminada", Toast.LENGTH_SHORT).show()
+        viewModel.succeedDelete = false
+        navController.popBackStack(Routes.Main.route, false)
+    }
 
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
@@ -65,19 +80,29 @@ fun EditPromoScreen(
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
-        topBar = { TopBarNavigateBack(navController) },
+        topBar = {
+            TopBarNavigateBack(navController) {
+                viewModel.deletePromo(promo?.id)
+            }
+        },
         floatingActionButton = {
             FabIcon(
                 icon = Icons.Rounded.Check,
                 onClick = {
                     promo?.let {
-                        updatePromo(
-                            it, stock,
-                            description,
-                            name, price,
-                            products, viewModel,
-                            navController
-                        )
+                        if (products?.size!! < 2){
+                            Toast.makeText(context, "La promocion debe contener al menos dos productos", Toast.LENGTH_SHORT).show()
+                        } else if (stock.isEmpty() || name.isEmpty() || price!!.isEmpty() || description.isEmpty() || products!!.isEmpty()) {
+                            Toast.makeText(context, "Debes completar todos los campos", Toast.LENGTH_SHORT).show()
+                        } else {
+                            updatePromo(
+                                it, stock,
+                                description,
+                                name, price,
+                                products, viewModel,
+                                navController
+                            )
+                        }
                     }
                 }
             )
@@ -114,6 +139,7 @@ fun EditPromoScreen(
                         FabIcon(
                             onClick = {
                                 addProducts(
+                                    promo?.id,
                                     stock, description,
                                     name, promo?.price,
                                     price, products,
@@ -143,6 +169,9 @@ fun EditPromoScreen(
 
                 TextFieldCommon(value = description, label = "Descripcion", onValueChange = { description = it })
             }
+            Box(Modifier.fillMaxWidth(), Alignment.Center) {
+                Progress(isDeleting)
+            }
         }
     }
 
@@ -166,7 +195,6 @@ private fun updatePromo(
             price = price?.toInt(),
             products = products
     )
-
     viewModel.updatePromo(prom)
     navController.popBackStack(Routes.Promos.route, false)
 }
@@ -178,32 +206,51 @@ fun onItemClick(
     productId: String,
     onNewList:(List<CartProduct>) -> Unit
 ) {
-
     if (products?.size!! <= 2) {
         scope.launch {
             snackbarHostState.showSnackbar("La promocion debe contener al menos dos productos")
         }
     } else {
-        val newList = products.filter { it.product.id != productId }
-        onNewList(newList)
+        val product = products.find { it.productId == productId }
+        product?.let {
+            if (it.quantity!! > 1){
+                val updatedProd = it
+                updatedProd.quantity = updatedProd.quantity?.minus(1)
+                val newList = products.toMutableList()
+                newList.remove(it)
+                newList.add(updatedProd)
+                onNewList(newList)
+            } else {
+                val newList = products.filter { it.productId != productId }
+                onNewList(newList)
+            }
+        } ?: run {
+            val newList = products.filter { it.productId != productId }
+            onNewList(newList)
+        }
     }
 }
 
 fun addProducts(
-    stock: String,
-    description: String,
-    name: String,
+    promoId: String?,
+    stock: String?,
+    description: String?,
+    name: String?,
     oldPrice: Int? = 0,
     price: String?,
     products: List<CartProduct>?,
     navController: NavHostController
 ) {
+    val stockk = if (stock.isNullOrEmpty()) 0 else stock.toInt()
+    val pricee = if (price.isNullOrEmpty()) 0 else price.toInt()
+
     val updatedPromo = Promo(
-        stock = stock.toInt(),
+        id = promoId,
+        stock = stockk,
         description = description,
         name = name,
         oldPrice = oldPrice,
-        price = price?.toInt(),
+        price = pricee,
         products = products
     )
     navController.currentBackStackEntry?.savedStateHandle?.set(

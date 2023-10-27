@@ -1,8 +1,8 @@
 package com.cucu.cucuadminpanel.presentation.products.edit
 
-import android.net.Uri
-import androidx.compose.foundation.clickable
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,10 +22,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -36,27 +39,44 @@ import com.cucu.cucuadminpanel.R
 import com.cucu.cucuadminpanel.application.Routes
 import com.cucu.cucuadminpanel.data.models.Product
 import com.cucu.cucuadminpanel.data.models.items.ItemCategory
-import com.cucu.cucuadminpanel.presentation.products.add.PickImageFromGallery
-import com.cucu.cucuadminpanel.presentation.products.add.SpinnerCountries
+import com.cucu.cucuadminpanel.presentation.products.add.Progress
+import com.cucu.cucuadminpanel.presentation.products.add.SpinnerStrings
 import com.cucu.cucuadminpanel.presentation.products.add.TextFieldCommon
 import com.cucu.cucuadminpanel.presentation.products.detail.view.FabIcon
 import com.cucu.cucuadminpanel.presentation.products.detail.view.TopBarNavigateBack
-import com.cucu.cucuadminpanel.presentation.products.detail.viewmodel.DetailViewModel
+import com.cucu.cucuadminpanel.presentation.products.detail.viewmodel.ProductDetailViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditScreen(
+fun EditProductScreen(
     product: Product?,
     mainNavController: NavHostController,
-    viewModel: DetailViewModel = hiltViewModel()
+    viewModel: ProductDetailViewModel = hiltViewModel()
 ) {
     product?.let { viewModel.setProduct(it) }
+    val context = LocalContext.current
+
+    val deleteState by rememberUpdatedState(newValue = viewModel.succeedDelete)
+    val editState by rememberUpdatedState(newValue = viewModel.succeedEdit)
+    val isDeleting = viewModel.isDeleting
+    val isEditing = viewModel.isEditing
+
+    if (deleteState){
+        Toast.makeText(context, "Producto eliminado", Toast.LENGTH_SHORT).show()
+        viewModel.succeedDelete = false
+        mainNavController.popBackStack(Routes.Main.route, false)
+    }
+
+    if (editState){
+        Toast.makeText(context, "Producto actualizado", Toast.LENGTH_SHORT).show()
+        viewModel.succeedEdit = false
+        mainNavController.popBackStack(Routes.Main.route, false)
+    }
 
     val snackbarHostState = remember { SnackbarHostState() }
 
     val productVM = viewModel.product.value
 
-    var image by rememberSaveable { mutableStateOf<Uri?>(null) }
     val oldPrice = viewModel.getOldPrice()
     var stock by rememberSaveable { mutableStateOf(productVM.stock.toString()) }
     var description by rememberSaveable { mutableStateOf(productVM.description.toString()) }
@@ -65,18 +85,13 @@ fun EditScreen(
     var category by rememberSaveable { mutableStateOf(productVM.category?.category.toString()) }
     var code by rememberSaveable { mutableStateOf(productVM.code.toString()) }
 
-    var getImage by remember { mutableStateOf(false) }
-
-    if (getImage){
-        PickImageFromGallery {
-            image = it
-            getImage = false
-        }
-    }
-
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
-        topBar = { TopBarNavigateBack(mainNavController) },
+        topBar = {
+            TopBarNavigateBack(mainNavController) {
+                viewModel.deleteProduct(product?.id)
+            }
+        },
         floatingActionButton = {
             FabIcon(
                 icon = Icons.Rounded.Check,
@@ -99,7 +114,6 @@ fun EditScreen(
                                 description = description)
                         }
                         viewModel.updateProduct(prod)
-                        mainNavController.popBackStack(Routes.Main.route, false)
                     }
                 }
             )
@@ -117,12 +131,14 @@ fun EditScreen(
             ) {
                 TextFieldCommon(value = name, label = "Nombre", onValueChange = { name = it })
                 AsyncImage(
-                    model = image ?: product?.img,
+                    model = product?.img,
                     contentScale = ContentScale.FillBounds,
                     contentDescription = null,
                     error = painterResource(id = R.drawable.ic_launcher_foreground),
                     placeholder = painterResource(id = R.drawable.ic_launcher_background),
-                    modifier = Modifier.fillMaxWidth().height(300.dp).clickable { getImage = true }
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(300.dp)
                 )
 
                 TextFieldCommon(
@@ -149,9 +165,13 @@ fun EditScreen(
                     onValueChange = { code = it}
                 )
 
-                SpinnerCountries(viewModel.getCategories(), "Categoria", category){ category = it }
+                SpinnerStrings(viewModel.getCategories(), "Categoria", category){ category = it }
 
                 TextFieldCommon(value = description, label = "Descripcion", onValueChange = { description = it })
+            }
+            Box(Modifier.fillMaxWidth(), Alignment.Center) {
+                Progress(isDeleting)
+                Progress(isEditing)
             }
         }
     }

@@ -31,9 +31,9 @@ import com.cucu.cucuadminpanel.presentation.navdrawer.promos.add.AddPromoScreen
 import com.cucu.cucuadminpanel.presentation.navdrawer.promos.detail.PromoDetail
 import com.cucu.cucuadminpanel.presentation.navdrawer.promos.edit.EditPromoScreen
 import com.cucu.cucuadminpanel.presentation.navdrawer.sales.PurchaseDetail
-import com.cucu.cucuadminpanel.presentation.products.add.AddScreen
-import com.cucu.cucuadminpanel.presentation.products.detail.view.DetailScreen
-import com.cucu.cucuadminpanel.presentation.products.edit.EditScreen
+import com.cucu.cucuadminpanel.presentation.products.add.AddProductScreen
+import com.cucu.cucuadminpanel.presentation.products.detail.view.ProductDetail
+import com.cucu.cucuadminpanel.presentation.products.edit.EditProductScreen
 import com.cucu.cucuadminpanel.ui.theme.CucuAdminPanelTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -42,7 +42,7 @@ class MainActivity : ComponentActivity() {
 
     private val navDrawerRoutes = listOf(
         Routes.Sales.route, Routes.Promos.route,
-        Routes.Products.route, Routes.Combos.route,
+        Routes.Products.route, //Routes.Combos.route,
         Routes.Discounts.route,
         Routes.Stats.route)
 
@@ -71,9 +71,7 @@ class MainActivity : ComponentActivity() {
         val navController = rememberNavController()
         NavHost(navController = navController, startDestination = Routes.Main.route){
             composable(Routes.Main.route){ MainScreen(navController) }
-            composable(Routes.AddProduct.route){ AddScreen(navController) }
-            //composable(Routes.AddPromo.route){ AddPromoScreen(navController) }
-            //composable(Routes.ChoosePromoProducts.route){ ChoosePromoProductsScreen(navController) }
+            composable(Routes.AddProduct.route){ AddProductScreen(navController) }
 
             arguedComposable<Promo>(
                 route = Routes.AddPromo.route,
@@ -92,14 +90,14 @@ class MainActivity : ComponentActivity() {
                 route = Routes.ProductDetail.route,
                 argument = "product",
                 navController = navController,
-                content = { DetailScreen(navController, it) }
+                content = { ProductDetail(navController, it) }
             )
 
             arguedComposable<Product>(
                 route = Routes.EditProduct.route,
                 argument = "product",
                 navController = navController,
-                content = { EditScreen(it, navController) }
+                content = { EditProductScreen(it, navController) }
             )
 
             arguedComposable<PurchaseReference>(

@@ -1,20 +1,24 @@
 package com.cucu.cucuadminpanel.presentation.products.add
 
 import android.net.Uri
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Check
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -31,17 +35,22 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.cucu.cucuadminpanel.R
+import com.cucu.cucuadminpanel.application.Routes
 import com.cucu.cucuadminpanel.data.models.Product
 import com.cucu.cucuadminpanel.data.models.items.ItemCategory
 import com.cucu.cucuadminpanel.presentation.products.detail.view.FabIcon
@@ -50,10 +59,14 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddScreen(
+fun AddProductScreen(
     navController: NavHostController,
-    viewModel:AddViewModel = hiltViewModel()
+    viewModel:AddProductViewModel = hiltViewModel()
 ) {
+    val addState by rememberUpdatedState(newValue = viewModel.succeedAdd)//= viewModel.succeedAdd
+    val isAdding = viewModel.isAdding
+    val context = LocalContext.current
+
     var image by rememberSaveable { mutableStateOf<Uri?>(null) }
     var stock by rememberSaveable { mutableStateOf("") }
     var description by rememberSaveable { mutableStateOf("") }
@@ -61,6 +74,12 @@ fun AddScreen(
     var newPrice by rememberSaveable { mutableStateOf("") }
     var category by rememberSaveable { mutableStateOf("") }
     var code by rememberSaveable { mutableStateOf("") }
+
+    if (addState == true){
+        Toast.makeText(context, "Producto añadido", Toast.LENGTH_SHORT).show()
+        viewModel.succeedAdd = false
+        navController.popBackStack(Routes.Main.route, false)
+    }
 
     var getImage by remember { mutableStateOf(false) }
 
@@ -72,22 +91,19 @@ fun AddScreen(
     }
 
     Scaffold(
-        topBar = { TopBarNavigateBack(navController) },
+        topBar = { TopBarNavigateBack(navController){} },
         floatingActionButton = {
             FabIcon(
                 icon = Icons.Rounded.Check,
                 onClick = {
-                    val newProduct = Product(
-                        name= name,
-                        stock = stock.toInt(),
-                        description = description,
-                        newPrice = newPrice.toDouble(),
-                        code = code.toLong(),
-                        category = ItemCategory(category = category)
+
+                    addNewProduct(
+                        name, stock,
+                        description,
+                        newPrice, code,
+                        category, image,
+                        viewModel
                     )
-                    image?.let {
-                        viewModel.addProduct(newProduct, it)
-                    }
                 }
             )
         }
@@ -136,17 +152,48 @@ fun AddScreen(
                     onValueChange = { code = it}
                 )
 
-                SpinnerCountries(viewModel.getCountries(), "Categoria"){ category = it }
+                SpinnerStrings(viewModel.getCountries(), "Categoria"){ category = it }
 
                 TextFieldCommon(label = "Descripcion", onValueChange = { description = it })
+            }
+            Box(Modifier.fillMaxWidth(), Alignment.Center) {
+                Progress(isAdding)
             }
         }
     }
 }
 
+private fun addNewProduct(
+    name: String,
+    stock: String,
+    description: String,
+    newPrice: String,
+    code: String,
+    category: String,
+    image: Uri?,
+    viewModel: AddProductViewModel
+) {
+    val newProduct = Product(
+        name = name,
+        stock = stock.toInt(),
+        description = description,
+        newPrice = newPrice.toDouble(),
+        code = code.toLong(),
+        category = ItemCategory(category = category)
+    )
+    image?.let {
+        viewModel.addProduct(newProduct, it)
+    }
+}
+
+@Composable
+fun Progress(isAdding: Boolean) {
+    if (isAdding) CircularProgressIndicator(Modifier.size(60.dp))
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SpinnerCountries(
+fun SpinnerStrings(
     list: List<String>,
     label: String,
     value: String? = "",
@@ -200,7 +247,9 @@ fun TextFieldCommon(
             onValueChange(textValue)
         },
         colors = colors,
-        keyboardOptions = keyboardOptions
+        keyboardOptions = keyboardOptions.copy(
+            capitalization = KeyboardCapitalization.Sentences
+        )
     )
 }
 

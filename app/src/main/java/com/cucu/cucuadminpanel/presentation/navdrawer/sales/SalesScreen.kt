@@ -46,6 +46,14 @@ fun SalesScreen(
             ItemSale(it, mainNavController)
         }
     }
+
+    /*val pagingItems: LazyPagingItems<Purchase> = viewModel.pagedSales.collectAsLazyPagingItems()
+
+    LazyColumn {
+        items(pagingItems.itemSnapshotList.items) { purchase ->
+            ItemSale(purchase, mainNavController)
+        }
+    }*/
 }
 
 @Composable
@@ -116,7 +124,9 @@ fun ItemSale(sale: Purchase, navController: NavHostController) {
                 }
 
                 Column(
-                    modifier = Modifier.padding(start = 8.dp).weight(2f),
+                    modifier = Modifier
+                        .padding(start = 8.dp)
+                        .weight(2f),
                     verticalArrangement = Arrangement.SpaceEvenly
                 ) {
                     Text(

@@ -1,5 +1,6 @@
 package com.cucu.cucuadminpanel.presentation.navdrawer.promos.add
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -29,6 +30,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -53,6 +55,7 @@ fun AddPromoScreen(
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     var products by remember { mutableStateOf<List<CartProduct>>(listOf()) }
     var stock by rememberSaveable { mutableStateOf("") }
@@ -70,11 +73,16 @@ fun AddPromoScreen(
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
-        topBar = { TopBarNavigateBack(navController) },
+        topBar = { TopBarNavigateBack(navController){} },
         floatingActionButton = {
             FabIcon(
                 icon = Icons.Rounded.Check,
                 onClick = {
+                    if (products.size < 2){
+                        Toast.makeText(context, "La promocion debe contener al menos dos productos", Toast.LENGTH_SHORT).show()
+                    } else if (stock.isEmpty() || name.isEmpty() || price.isEmpty() || description.isEmpty() || products.isEmpty()) {
+                        Toast.makeText(context, "Debes completar todos los campos", Toast.LENGTH_SHORT).show()
+                    } else {
                         createPromo(
                             stock = stock,
                             description = description,
@@ -82,6 +90,7 @@ fun AddPromoScreen(
                             products = products, viewModel = viewModel,
                             navController = navController
                         )
+                    }
                 }
             )
         }
@@ -117,6 +126,7 @@ fun AddPromoScreen(
                         FabIcon(
                             onClick = {
                                 addProducts(
+                                    promo?.id,
                                     stock = stock,
                                     description = description,
                                     name = name,
@@ -168,7 +178,6 @@ fun createPromo(
         price = price.toInt(),
         products = products
     )
-
     viewModel.createPromo(prom)
     navController.popBackStack(Routes.Promos.route, false)
 }

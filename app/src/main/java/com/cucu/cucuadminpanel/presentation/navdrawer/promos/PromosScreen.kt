@@ -125,7 +125,7 @@ fun PromoProductsItem(product: CartProduct, isEditMode: Boolean = false, onRemov
                     .size(100.dp, height = 120.dp)
                     .background(Purple80.copy(0.3f), RoundedCornerShape(20.dp))
             ) {
-                Box() {
+                Box {
                     AsyncImage(
                         modifier = Modifier.height(80.dp).width(100.dp)
                             .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
@@ -142,7 +142,7 @@ fun PromoProductsItem(product: CartProduct, isEditMode: Boolean = false, onRemov
                                     shape = RoundedCornerShape(topStart = 8.dp, bottomEnd = 8.dp)
                                 )
                                 .padding(8.dp)
-                                .clickable { onRemoveProduct(product.product.id!!) }
+                                .clickable { onRemoveProduct(product.productId!!) }
                         )
                     }
                     Text(

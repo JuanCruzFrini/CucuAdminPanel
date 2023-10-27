@@ -12,7 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import com.cucu.cucuadminpanel.application.Routes
 import com.cucu.cucuadminpanel.data.models.promo.Promo
-import com.cucu.cucuadminpanel.presentation.navdrawer.combos.CombosScreen
 import com.cucu.cucuadminpanel.presentation.navdrawer.discounts.DiscountsScreen
 import com.cucu.cucuadminpanel.presentation.navdrawer.products.view.ProductsScreen
 import com.cucu.cucuadminpanel.presentation.navdrawer.promos.PromosScreen
@@ -27,7 +26,7 @@ fun NavDrawerDestinationsController(mainNavController: NavHostController) {
 
     Scaffold(
         Modifier.fillMaxSize(),
-        topBar = { TopBarNavigateBack(mainNavController) },
+        topBar = { TopBarNavigateBack(mainNavController){} },
         floatingActionButton = { NavDrawerFabController(mainNavController) }
     ) { paddingValues ->
         Surface(modifier = Modifier.padding(paddingValues)) {
@@ -69,7 +68,7 @@ fun SetContent(mainNavController: NavHostController) {
         Routes.Sales.route -> SalesScreen(mainNavController)
         Routes.Promos.route -> PromosScreen(mainNavController)
         Routes.Products.route -> ProductsScreen(mainNavController)
-        Routes.Combos.route -> CombosScreen(mainNavController)
+        //Routes.Combos.route -> CombosScreen(mainNavController)
         Routes.Discounts.route -> DiscountsScreen(mainNavController)
         Routes.Stats.route -> StatsScreen(mainNavController)
         else -> { }

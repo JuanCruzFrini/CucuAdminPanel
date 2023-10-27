@@ -26,7 +26,6 @@ data class Product(
     val category: ItemCategory? = ItemCategory()
 ) : Parcelable {
 
-    //@get:Exclude
     fun isDiscount(): Boolean{
         return if (newPrice!=null && oldPrice!=null){
             newPrice!!.toInt() < oldPrice.toInt()

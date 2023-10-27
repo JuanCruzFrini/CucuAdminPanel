@@ -62,11 +62,14 @@ class ProductsDataSource @Inject constructor(
         return product
     }
 
-    private suspend fun addNewProduct(product: Product){
-        db.collection(Constants.PRODUCTS_COLL).add(product).await()
+    private suspend fun addNewProduct(product: Product) : Boolean {
+        val job = db.collection(Constants.PRODUCTS_COLL).add(product)
+        job.await()
+        return job.isSuccessful
     }
 
-    suspend fun uploadImage(product: Product, image:Uri?){
+    suspend fun uploadImage(product: Product, image:Uri?) : Boolean {
+        var successful = false
         getBitmapFromUri(context, image!!)?.let { bitmap ->
             val productsRef = storage.reference.child(Constants.PRODUCTS_COLL)
             //Reduce the weight of the image to upload
@@ -74,33 +77,19 @@ class ProductsDataSource @Inject constructor(
             bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos)
 
             //Upload the compressed image
-            val task = productsRef.child(image.lastPathSegment.toString()).putBytes(baos.toByteArray()).await()
+            val task = productsRef.child(image.encodedPath?.replace("/","").toString()).putBytes(baos.toByteArray()).await()
 
             val imageUri = task.storage.downloadUrl.await()
             product.img = imageUri.toString()
-            addNewProduct(product)
+            successful = addNewProduct(product)
         }
+        return successful
     }
 
-    /*suspend fun getCategories(): List<ItemCategory> {
-        val categories = mutableListOf<ItemCategory>()
-
-        val fetch = db.collection(Constants.CATEGORIES_COLL)
-            .orderBy(Constants.CATEGORY, Query.Direction.ASCENDING)
-            .get()
-            .await()
-
-        fetch.documents.forEach{ document ->
-            val category = document.toObject(ItemCategory::class.java)
-            category?.let { categories.add(it) }
-        }
-
-        return categories
-    }*/
-
-    suspend fun updateProduct(product: Product) {
+    suspend fun updateProduct(product: Product) : Boolean {
+        var result = false
         product.id?.let { id ->
-            db.collection(Constants.PRODUCTS_COLL)
+            val job = db.collection(Constants.PRODUCTS_COLL)
                 .document(id)
                 .update(
                     mapOf(
@@ -112,7 +101,33 @@ class ProductsDataSource @Inject constructor(
                         "category" to product.category,
                         "code" to product.code,
                     )
-                ).await()
+                )
+            job.await()
+            result = job.isSuccessful
         }
+        return result
+    }
+
+    suspend fun deleteProduct(productId: String?) : Boolean {
+        var result = false
+        productId?.let { id ->
+            val docRef = db.collection(Constants.PRODUCTS_COLL).document(id)
+            val product = docRef.get().await().toObject(Product::class.java)
+
+            product?.img?.let {
+                result = try {
+                    val deleteImage = storage.getReferenceFromUrl(it).delete()
+                    deleteImage.await()
+                    if (deleteImage.isSuccessful){
+                        val deleteDoc = docRef.delete()
+                        deleteDoc.await()
+                        deleteDoc.isSuccessful
+                    } else { false }
+                } catch (e:Exception){
+                    false
+                }
+            }
+        }
+        return result
     }
 }

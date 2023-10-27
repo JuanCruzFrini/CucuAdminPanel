@@ -26,13 +26,25 @@ fun ChoosePromoProductsScreen(
     viewModel.getAllProducts()
 
     Scaffold(
-        topBar = { TopBarNavigateBack(navController) }
+        topBar = { TopBarNavigateBack(navController){} }
     ) {
         LazyColumn (Modifier.padding(it)){
             items(viewModel.products){
                 ProductItem(it){
+                    val newProduct = CartProduct(productId = it.id, product = it, quantity = 1)
+
                     val newList = promo?.products?.toMutableList()
-                    newList?.add(CartProduct(productId = it.id, product = it, quantity = 1))
+
+                    val existObject = newList?.find { it.productId == newProduct.productId }
+
+                    existObject?.let {
+                        newProduct.quantity = it.quantity?.plus(1)
+                        newList.remove(it)
+                        newList.add(newProduct)
+                    } ?: run {
+                        newList?.add(newProduct)
+                    }
+
                     val updatedPromo = promo?.copy(products = newList)
 
                     checkDestination(navController, updatedPromo)

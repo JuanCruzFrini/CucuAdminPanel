@@ -1,14 +1,12 @@
-package com.cucu.cucuadminpanel.data.network
+package com.cucu.cucuadminpanel.data.network.sales
 
-import android.content.Context
 import com.cucu.cucuadminpanel.application.Constants
 import com.cucu.cucuadminpanel.data.models.Notification
 import com.cucu.cucuadminpanel.data.models.purchase.Purchase
 import com.cucu.cucuadminpanel.data.models.purchase.PurchaseReference
 import com.cucu.cucuadminpanel.data.models.purchase.PurchaseState
+import com.cucu.cucuadminpanel.data.network.ProductsDataSource
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -17,9 +15,7 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class SalesDataSource @Inject constructor(
-    @ApplicationContext private val context: Context,
     private val db: FirebaseFirestore,
-    private val storage: FirebaseStorage,
     private val productsDataSource: ProductsDataSource
 ) {
 
@@ -78,12 +74,12 @@ class SalesDataSource @Inject constructor(
                 .update("state", PurchaseState.Cancelled().description)
                 .await()
 
-            notififyUserAboutPurchaseStateChange(ref, cancelReason)
+            notifyUserAboutPurchaseStateChange(ref, cancelReason)
             reloadStock(getSaleById(purchaseRef))
         }
     }
 
-    private suspend fun notififyUserAboutPurchaseStateChange(
+    private suspend fun notifyUserAboutPurchaseStateChange(
         purchaseRef: PurchaseReference,
         cancelReason: String? = ""
     ) {

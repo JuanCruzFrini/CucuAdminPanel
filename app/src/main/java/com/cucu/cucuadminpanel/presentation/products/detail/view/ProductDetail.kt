@@ -2,7 +2,6 @@ package com.cucu.cucuadminpanel.presentation.products.detail.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,6 +13,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -43,6 +43,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
@@ -52,7 +53,7 @@ import com.cucu.cucuadminpanel.application.calculateDiscountPercent
 import com.cucu.cucuadminpanel.application.firstCharToUpperCase
 import com.cucu.cucuadminpanel.application.textWithLineThrough
 import com.cucu.cucuadminpanel.data.models.Product
-import com.cucu.cucuadminpanel.presentation.products.detail.viewmodel.DetailViewModel
+import com.cucu.cucuadminpanel.presentation.products.detail.viewmodel.ProductDetailViewModel
 import com.cucu.cucuadminpanel.ui.theme.Purple40
 import com.cucu.cucuadminpanel.ui.theme.Purple80
 import kotlinx.coroutines.launch
@@ -60,10 +61,10 @@ import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetailScreen(
+fun ProductDetail(
     mainNavController: NavHostController,
     product: Product?,
-    viewModel: DetailViewModel = hiltViewModel()
+    viewModel: ProductDetailViewModel = hiltViewModel()
 ) {
     product?.let { viewModel.setProduct(it) }
 
@@ -72,7 +73,7 @@ fun DetailScreen(
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
-        topBar = { TopBarNavigateBack(mainNavController) },
+        topBar = { TopBarNavigateBack(mainNavController){} },
         floatingActionButton = {
             FabIcon(
                 icon = Icons.Rounded.Edit,
@@ -107,7 +108,10 @@ fun FabIcon(onClick:() -> Unit, icon:ImageVector) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBarNavigateBack(mainNavController: NavHostController) {
+fun TopBarNavigateBack(
+    mainNavController: NavHostController,
+    onDeleteClick:()-> Unit
+) {
 
     val checkRoute = when (mainNavController.currentDestination?.route){
         Routes.ProductDetail.route -> "Detail"
@@ -134,6 +138,16 @@ fun TopBarNavigateBack(mainNavController: NavHostController) {
                     IconButton(onClick = { mainNavController.popBackStack() }) {
                         Icon(Icons.Filled.ArrowBack, contentDescription = null)
                     }
+                },
+                actions = {
+                    when (mainNavController.currentDestination?.route){
+                        Routes.EditProduct.route, Routes.EditPromo.route -> {
+                            IconButton(onClick = { onDeleteClick() }) {
+                                Icon(imageVector = Icons.Rounded.Delete, contentDescription = "")
+                            }
+                        }
+                        else -> { }
+                    }
                 }
             )
         }
@@ -141,7 +155,7 @@ fun TopBarNavigateBack(mainNavController: NavHostController) {
 
 @Composable
 fun DetailContent(
-    viewModel: DetailViewModel = hiltViewModel(),
+    viewModel: ProductDetailViewModel = hiltViewModel(),
     showSnackBar:(String) -> Unit
 ) {
     val product = viewModel.product.value
@@ -153,7 +167,9 @@ fun DetailContent(
             .verticalScroll(state = rememberScrollState())) {
 
         Text(text = product.name.toString(),
-            Modifier.fillMaxWidth().padding(16.dp))
+            Modifier
+                .fillMaxWidth()
+                .padding(16.dp))
 
         AsyncImage(
             model = product.img,
@@ -161,7 +177,9 @@ fun DetailContent(
             contentDescription = null,
             error = painterResource(id = R.drawable.ic_launcher_foreground),
             placeholder = painterResource(id = R.drawable.ic_launcher_background),
-            modifier = Modifier.fillMaxWidth().height(300.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(300.dp)
         )
         StatsBlock(product)
 
@@ -192,24 +210,34 @@ fun StatsBlock(product: Product) {
             )
             .padding(8.dp),
         horizontalArrangement = Arrangement.SpaceEvenly,
-        /*verticalAlignment = Alignment.CenterVertically*/
     ) {
-        StatField(product.seenTimes.toString(), painterResource(id = R.drawable.eye_icon), Modifier.weight(1f))
-        StatField(product.favTimes.toString(), painterResource(id = R.drawable.favorite_icon), Modifier.weight(1f))
-        StatField(product.soldTimes.toString(), painterResource(id = R.drawable.bag_icon), Modifier.weight(1f))
+        StatsField(product.seenTimes.toString(), painterResource(id = R.drawable.eye_icon))
+        StatsField(product.favTimes.toString(), painterResource(id = R.drawable.favorite_icon))
+        StatsField(product.soldTimes.toString(), painterResource(id = R.drawable.bag_icon))
     }
 }
 
 @Composable
-fun StatField(text: String, painterResource: Painter, modifier: Modifier) {
-    Box {
-        Column(
-            modifier = modifier,
-            verticalArrangement = Arrangement.Center) {
-            Icon(painter = painterResource, contentDescription = "", tint = Purple80)
-            //Divider(color = Purple80)
-            Text(text = text, textAlign = TextAlign.Center)
-        }
+fun StatsField(text: String, painterResource: Painter) {
+    ConstraintLayout {
+        val (icon, number) = createRefs()
+
+        Icon(
+            modifier = Modifier.constrainAs(icon) {
+                top.linkTo(parent.top)
+            },
+            painter = painterResource,
+            contentDescription = "",
+        )
+
+        Text(
+            modifier = Modifier.constrainAs(number) {
+                top.linkTo(icon.bottom)
+                start.linkTo(icon.start)
+                end.linkTo(icon.end)
+            },
+            text = text, textAlign = TextAlign.Center
+        )
     }
 }
 

@@ -22,8 +22,12 @@ class EditPromoViewModel @Inject constructor(
 
     var products by mutableStateOf<List<Product>>(emptyList())
 
+    var succeedDelete by mutableStateOf(false)
+    var isDeleting by mutableStateOf(false)
+
     fun setPromotion(promo: Promo){
         this.promo = promo
+        Log.d("promo", promo.toString())
     }
     fun getAllProducts(){
         viewModelScope.launch {
@@ -40,6 +44,19 @@ class EditPromoViewModel @Inject constructor(
             try {
                 repository.updatePromo(promo)
             }catch (e:Exception){
+                Log.d("Error update", e.message.toString())
+            }
+        }
+    }
+
+    fun deletePromo(promoId: String?) {
+        viewModelScope.launch {
+            isDeleting = true
+            try {
+                isDeleting = false
+                succeedDelete = repository.deletePromo(promoId)
+            }catch (e:Exception){
+                isDeleting = false
                 Log.d("Error update", e.message.toString())
             }
         }

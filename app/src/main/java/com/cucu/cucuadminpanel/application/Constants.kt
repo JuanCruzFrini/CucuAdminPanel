@@ -4,23 +4,22 @@ import com.cucu.cucuadminpanel.data.models.purchase.PurchaseStateDescription
 
 object Constants {
 
+    //Collections
     const val PRODUCTS_COLL = "products"
-    const val CATEGORIES_COLL = "categories"
     const val PURCHASES_COLL = "purchases"
     const val PURCHASES_REFS_COLL = "purchases_references"
     const val USERS_COLL = "users"
     const val NOTIFICATIONS_COLL = "notifications"
     const val PROMOS_COLL = "promotions"
 
-
-    const val FAVORITES_COLL = "favorites"
-    const val CART_COLL = "cart"
-    const val HISTORY_COLL = "history"
-
+    //Product parameters
     const val CATEGORY = "category"
     const val PRODUCT_ID = "productId"
     const val DATE = "date"
     const val QUANTITY = "quantity"
+    const val SEEN_TIMES = "seenTimes"
+    const val SOLD_TIMES = "soldTimes"
+    const val FAV_TIMES = "favTimes"
 
     val purchaseStates = listOf(
         PurchaseStateDescription("1- Pago pendiente:","El pago no ha sido realizado, o fue efectuado pero la tienda aún no ha verificado que se haya efectuado correctamente"),
