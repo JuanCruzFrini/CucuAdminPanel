@@ -1,4 +1,4 @@
-package com.cucu.cucuadminpanel.presentation.products.add
+package com.cucu.cucuadminpanel.presentation.products.add.view
 
 import android.net.Uri
 import android.widget.Toast
@@ -53,6 +53,7 @@ import com.cucu.cucuadminpanel.R
 import com.cucu.cucuadminpanel.application.Routes
 import com.cucu.cucuadminpanel.data.models.Product
 import com.cucu.cucuadminpanel.data.models.items.ItemCategory
+import com.cucu.cucuadminpanel.presentation.products.add.viewmodel.AddProductViewModel
 import com.cucu.cucuadminpanel.presentation.products.detail.view.FabIcon
 import com.cucu.cucuadminpanel.presentation.products.detail.view.TopBarNavigateBack
 import kotlinx.coroutines.launch
@@ -61,7 +62,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun AddProductScreen(
     navController: NavHostController,
-    viewModel:AddProductViewModel = hiltViewModel()
+    viewModel: AddProductViewModel = hiltViewModel()
 ) {
     val addState by rememberUpdatedState(newValue = viewModel.succeedAdd)//= viewModel.succeedAdd
     val isAdding = viewModel.isAdding

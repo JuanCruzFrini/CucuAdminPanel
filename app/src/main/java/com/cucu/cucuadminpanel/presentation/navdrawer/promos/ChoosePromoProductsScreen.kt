@@ -13,7 +13,7 @@ import com.cucu.cucuadminpanel.application.Routes
 import com.cucu.cucuadminpanel.data.models.cart.CartProduct
 import com.cucu.cucuadminpanel.data.models.promo.Promo
 import com.cucu.cucuadminpanel.presentation.home.view.ProductItem
-import com.cucu.cucuadminpanel.presentation.navdrawer.promos.edit.EditPromoViewModel
+import com.cucu.cucuadminpanel.presentation.navdrawer.promos.edit.viewmodel.EditPromoViewModel
 import com.cucu.cucuadminpanel.presentation.products.detail.view.TopBarNavigateBack
 
 @OptIn(ExperimentalMaterial3Api::class)

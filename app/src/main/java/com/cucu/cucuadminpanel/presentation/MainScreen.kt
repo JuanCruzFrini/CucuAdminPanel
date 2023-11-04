@@ -7,8 +7,6 @@ import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -22,6 +20,7 @@ import com.cucu.cucuadminpanel.application.Routes
 import com.cucu.cucuadminpanel.presentation.home.view.NavDrawer
 import com.cucu.cucuadminpanel.presentation.home.view.ProductsList
 import com.cucu.cucuadminpanel.presentation.home.view.TopBar
+import com.cucu.cucuadminpanel.presentation.products.detail.view.FabIcon
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -44,19 +43,17 @@ fun MainContent(drawerState: DrawerState, mainNavController: NavHostController) 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
     Scaffold(
-        floatingActionButton = { FabCreateNewProduct(mainNavController) },
+        floatingActionButton = {
+            FabIcon(
+                onClick = { mainNavController.navigate(Routes.AddProduct.route) },
+                icon = Icons.Rounded.Add
+            )
+        },
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = { TopBar(scrollBehavior, drawerState) }
     ) { innerPadding ->
         Surface(Modifier.padding(innerPadding)) {
             ProductsList(mainNavController)
         }
-    }
-}
-
-@Composable
-fun FabCreateNewProduct(mainNavController: NavHostController) {
-    FloatingActionButton(onClick = { mainNavController.navigate(Routes.AddProduct.route) }) {
-        Icon(imageVector = Icons.Rounded.Add, contentDescription = "Add new product")
     }
 }

@@ -1,4 +1,4 @@
-package com.cucu.cucuadminpanel.presentation.navdrawer.sales
+package com.cucu.cucuadminpanel.presentation.navdrawer.sales.detail
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -57,7 +57,8 @@ import com.cucu.cucuadminpanel.data.models.cart.CartProduct
 import com.cucu.cucuadminpanel.data.models.purchase.Purchase
 import com.cucu.cucuadminpanel.data.models.purchase.PurchaseReference
 import com.cucu.cucuadminpanel.data.models.purchase.PurchaseState
-import com.cucu.cucuadminpanel.presentation.products.add.TextFieldCommon
+import com.cucu.cucuadminpanel.presentation.navdrawer.sales.viewmodel.SalesViewModel
+import com.cucu.cucuadminpanel.presentation.products.add.view.TextFieldCommon
 import com.cucu.cucuadminpanel.ui.theme.Purple40
 import com.cucu.cucuadminpanel.ui.theme.Purple80
 import com.cucu.cucuadminpanel.ui.theme.PurpleGrey80
@@ -70,66 +71,64 @@ fun PurchaseDetail(
     mainNavController: NavHostController,
     viewModel: SalesViewModel = hiltViewModel()
 ) {
-    purchaseRef?.let { viewModel.getSaleById(purchaseRef)/*viewModel.getPurchaseById(purchaseId)*/ }
+    purchaseRef?.let { viewModel.getSaleById(purchaseRef) }
 
-    //viewModel.purchase.observeAsState().value?.let { purchase ->
-        var showCancelDialog by remember { mutableStateOf(false) }
-        var state by rememberSaveable { mutableStateOf(viewModel.sale.state/*purchase.state*/) }
+    var showCancelDialog by remember { mutableStateOf(false) }
+    var state by rememberSaveable { mutableStateOf(viewModel.sale.state) }
 
-        Scaffold(
-            topBar = {
-                TopBarPurchase(mainNavController, state) {
-                    showCancelDialog = it
-                } /*TopBarNavigateBack(mainNavController = mainNavController)*/
-            }
-        ) { paddingValues ->
-            ConstraintLayout(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-            ) {
-                val (list, footer) = createRefs()
-
-                DialogCancelPurchase(
-                    show = showCancelDialog,
-                    onDismiss = { showCancelDialog = !showCancelDialog },
-                    onContinue = { cancelReason ->
-                        viewModel.cancelSale(purchaseRef, cancelReason)
-                        state = PurchaseState.Cancelled().description
-                        showCancelDialog = !showCancelDialog
-                    }
-                )
-
-                LazyColumn(
-                    modifier = Modifier
-                        .constrainAs(list) {
-                            top.linkTo(parent.top)
-                            start.linkTo(parent.start)
-                            end.linkTo(parent.end)
-                        }
-                        .padding(0.dp, 0.dp, 0.dp, 140.dp)
-                ) {
-                    viewModel.sale.products?.let { products ->
-                        items(products, key = { it.product.id!! }) { purchaseItem ->
-                            PurchaseDetailItem(purchaseItem)
-                        }
-                    }
-                }
-
-                state?.let {
-                    PurchaseFooter(
-                        it,
-                        viewModel.sale,
-                        modifier = Modifier.constrainAs(footer) {
-                            bottom.linkTo(parent.bottom)
-                            start.linkTo(parent.start)
-                            end.linkTo(parent.end)
-                        }
-                    )
-                }
+    Scaffold(
+        topBar = {
+            TopBarPurchase(mainNavController, state) {
+                showCancelDialog = it
             }
         }
-   // }
+    ) { paddingValues ->
+        ConstraintLayout(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+        ) {
+            val (list, footer) = createRefs()
+
+            DialogCancelPurchase(
+                show = showCancelDialog,
+                onDismiss = { showCancelDialog = !showCancelDialog },
+                onContinue = { cancelReason ->
+                    viewModel.cancelSale(purchaseRef, cancelReason)
+                    state = PurchaseState.Cancelled().description
+                    showCancelDialog = !showCancelDialog
+                }
+            )
+
+            LazyColumn(
+                modifier = Modifier
+                    .constrainAs(list) {
+                        top.linkTo(parent.top)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    }
+                    .padding(0.dp, 0.dp, 0.dp, 140.dp)
+            ) {
+                viewModel.sale.products?.let { products ->
+                    items(products, key = { it.product.id!! }) { purchaseItem ->
+                        PurchaseDetailItem(purchaseItem)
+                    }
+                }
+            }
+
+            state?.let {
+                PurchaseFooter(
+                    it,
+                    viewModel.sale,
+                    modifier = Modifier.constrainAs(footer) {
+                        bottom.linkTo(parent.bottom)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    }
+                )
+            }
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -148,18 +147,7 @@ fun TopBarPurchase(
             ),
             title = { Text(text = "Purchase")},
             navigationIcon = {
-                IconButton(onClick = {
-                    //Por alguna razon cuando el backstack es ProductDetail, no vuelve
-                    mainNavController.popBackStack()
-                   /* when {
-                        mainNavController.popBackStack(Routes.Purchases.route, false) -> {
-                            mainNavController.popBackStack(Routes.Purchases.route, false)
-                        }
-                        else -> {
-                            mainNavController.popBackStack(Routes.Main.route, false)
-                        }
-                    }*/
-                }) {
+                IconButton(onClick = { mainNavController.popBackStack() }) {
                     Icon(Icons.Filled.ArrowBack, contentDescription = null)
                 }
             },
@@ -231,7 +219,7 @@ fun PurchaseFooter(state: String, purchase: Purchase?, modifier: Modifier) {
     var showDialog by remember { mutableStateOf(false) }
 
     DialogPurchaseStates(
-        state = /*purchase?.*/state,
+        state = state,
         show = showDialog
     ) { showDialog = !showDialog }
 

@@ -1,4 +1,4 @@
-package com.cucu.cucuadminpanel.presentation.products.add
+package com.cucu.cucuadminpanel.presentation.products.add.viewmodel
 
 import android.net.Uri
 import android.util.Log

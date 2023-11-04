@@ -1,4 +1,4 @@
-package com.cucu.cucuadminpanel.presentation.navdrawer.stats
+package com.cucu.cucuadminpanel.presentation.navdrawer.stats.view
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -35,6 +35,7 @@ import com.cucu.cucuadminpanel.application.calculateDiscountPercent
 import com.cucu.cucuadminpanel.application.firstCharToUpperCase
 import com.cucu.cucuadminpanel.data.models.Product
 import com.cucu.cucuadminpanel.data.models.Stat
+import com.cucu.cucuadminpanel.presentation.navdrawer.stats.viewmodel.StatsViewModel
 import kotlin.math.roundToInt
 
 @Composable

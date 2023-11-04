@@ -13,10 +13,11 @@ object Constants {
     const val PROMOS_COLL = "promotions"
 
     //Product parameters
-    const val CATEGORY = "category"
+    /*const val CATEGORY = "category"
     const val PRODUCT_ID = "productId"
+    const val QUANTITY = "quantity"*/
     const val DATE = "date"
-    const val QUANTITY = "quantity"
+    const val STOCK = "stock"
     const val SEEN_TIMES = "seenTimes"
     const val SOLD_TIMES = "soldTimes"
     const val FAV_TIMES = "favTimes"
@@ -29,5 +30,13 @@ object Constants {
         PurchaseStateDescription("5- Listo para retirar:","Tu compra está preparada para que la retires en la tienda"),
         PurchaseStateDescription("6- Entregado:","Haz retirado tu compra de la tienda"),
         PurchaseStateDescription("7- Cancelado:","Tu compra ha sido cancelada, esto puede ocurrir por parte de la tienda por falta de stock, o bien puedes cancelarla antes de efectuar el pago"),
+    )
+
+    val navDrawerRoutes = listOf(
+        Routes.Sales.route,
+        Routes.Promos.route,
+        Routes.Products.route,
+        Routes.Discounts.route,
+        Routes.Stats.route
     )
 }

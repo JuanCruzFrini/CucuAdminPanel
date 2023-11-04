@@ -18,8 +18,8 @@ class SalesPagingSource @Inject constructor() : PagingSource<QuerySnapshot, Purc
             val db = FirebaseFirestore.getInstance()
 
             val query = db.collection(Constants.PURCHASES_REFS_COLL)
-                    .orderBy("date", Query.Direction.ASCENDING)
-                    .limit(params.loadSize.toLong())
+                    .orderBy("date", Query.Direction.DESCENDING)
+                    .limit(3)
 
             val currentPage = params.key ?: query.get().await()
             val lastVisibleProduct = currentPage.documents[currentPage.documents.lastIndex]

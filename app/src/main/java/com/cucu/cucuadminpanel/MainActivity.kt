@@ -1,7 +1,6 @@
 package com.cucu.cucuadminpanel
 
 import android.os.Bundle
-import android.os.Parcelable
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -11,15 +10,12 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
+import com.cucu.cucuadminpanel.application.Constants
 import com.cucu.cucuadminpanel.application.Routes
-import com.cucu.cucuadminpanel.application.parcelableTypeOf
+import com.cucu.cucuadminpanel.application.arguedComposable
 import com.cucu.cucuadminpanel.data.models.Product
 import com.cucu.cucuadminpanel.data.models.promo.Promo
 import com.cucu.cucuadminpanel.data.models.purchase.PurchaseReference
@@ -27,11 +23,11 @@ import com.cucu.cucuadminpanel.presentation.MainScreen
 import com.cucu.cucuadminpanel.presentation.home.viewmodel.HomeViewModel
 import com.cucu.cucuadminpanel.presentation.navdrawer.NavDrawerDestinationsController
 import com.cucu.cucuadminpanel.presentation.navdrawer.promos.ChoosePromoProductsScreen
-import com.cucu.cucuadminpanel.presentation.navdrawer.promos.add.AddPromoScreen
+import com.cucu.cucuadminpanel.presentation.navdrawer.promos.add.view.AddPromoScreen
 import com.cucu.cucuadminpanel.presentation.navdrawer.promos.detail.PromoDetail
-import com.cucu.cucuadminpanel.presentation.navdrawer.promos.edit.EditPromoScreen
-import com.cucu.cucuadminpanel.presentation.navdrawer.sales.PurchaseDetail
-import com.cucu.cucuadminpanel.presentation.products.add.AddProductScreen
+import com.cucu.cucuadminpanel.presentation.navdrawer.promos.edit.view.EditPromoScreen
+import com.cucu.cucuadminpanel.presentation.navdrawer.sales.detail.PurchaseDetail
+import com.cucu.cucuadminpanel.presentation.products.add.view.AddProductScreen
 import com.cucu.cucuadminpanel.presentation.products.detail.view.ProductDetail
 import com.cucu.cucuadminpanel.presentation.products.edit.EditProductScreen
 import com.cucu.cucuadminpanel.ui.theme.CucuAdminPanelTheme
@@ -40,18 +36,11 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private val navDrawerRoutes = listOf(
-        Routes.Sales.route, Routes.Promos.route,
-        Routes.Products.route, //Routes.Combos.route,
-        Routes.Discounts.route,
-        Routes.Stats.route)
-
     private val viewModel by viewModels<HomeViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         installSplashScreen().apply {
-            viewModel.getAllProducts()
             setKeepOnScreenCondition { viewModel.isLoading.value }
         }
         setContent {
@@ -114,7 +103,7 @@ class MainActivity : ComponentActivity() {
                 content = { PromoDetail(it, navController) }
             )
 
-            navDrawerRoutes.forEach {
+            Constants.navDrawerRoutes.forEach {
                 composable(it){ NavDrawerDestinationsController(navController) }
             }
 
@@ -127,19 +116,3 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
-inline fun <reified T : Parcelable> NavGraphBuilder.arguedComposable(
-     route:String,
-     argument:String,
-     navController: NavHostController,
-     crossinline content: @Composable (T?) -> Unit
-) {
-    this.composable(
-        route = route,
-        arguments = listOf(navArgument(argument){ type = NavType.parcelableTypeOf<T>() })
-    ) {
-        val value = navController.previousBackStackEntry?.savedStateHandle?.get<T>(argument)
-        content(value)
-    }
-}
-

@@ -1,4 +1,4 @@
-package com.cucu.cucuadminpanel.presentation.navdrawer.promos.edit
+package com.cucu.cucuadminpanel.presentation.navdrawer.promos.edit.viewmodel
 
 import android.util.Log
 import androidx.compose.runtime.getValue

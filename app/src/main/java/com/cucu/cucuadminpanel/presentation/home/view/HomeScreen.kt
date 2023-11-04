@@ -146,7 +146,6 @@ fun ProductItem(product: Product, onClick:(Product) -> Unit) {
             }
         }
     }
-
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -159,7 +158,6 @@ fun NavDrawer(drawerState: DrawerState, mainNavController: NavHostController) {
         ItemMenu(Routes.Sales.route, Icons.Filled.ShoppingCart, Routes.Sales.route),
         ItemMenu(Routes.Products.route, Icons.Filled.List, Routes.Products.route),
         ItemMenu(Routes.Promos.route, Icons.Filled.List, Routes.Promos.route),
-        //ItemMenu(Routes.Combos.route, Icons.Filled.List, Routes.Combos.route),
         ItemMenu(Routes.Discounts.route, Icons.Filled.List, Routes.Discounts.route),
         ItemMenu(Routes.Stats.route, Icons.Rounded.Info, Routes.Stats.route)
     )

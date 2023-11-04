@@ -1,4 +1,4 @@
-package com.cucu.cucuadminpanel.presentation.navdrawer.promos.edit
+package com.cucu.cucuadminpanel.presentation.navdrawer.promos.edit.view
 
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -41,8 +41,9 @@ import com.cucu.cucuadminpanel.application.Routes
 import com.cucu.cucuadminpanel.data.models.cart.CartProduct
 import com.cucu.cucuadminpanel.data.models.promo.Promo
 import com.cucu.cucuadminpanel.presentation.navdrawer.promos.PromoProductsItem
-import com.cucu.cucuadminpanel.presentation.products.add.Progress
-import com.cucu.cucuadminpanel.presentation.products.add.TextFieldCommon
+import com.cucu.cucuadminpanel.presentation.navdrawer.promos.edit.viewmodel.EditPromoViewModel
+import com.cucu.cucuadminpanel.presentation.products.add.view.Progress
+import com.cucu.cucuadminpanel.presentation.products.add.view.TextFieldCommon
 import com.cucu.cucuadminpanel.presentation.products.detail.view.FabIcon
 import com.cucu.cucuadminpanel.presentation.products.detail.view.TopBarNavigateBack
 import com.cucu.cucuadminpanel.ui.theme.Purple40
@@ -54,7 +55,7 @@ import kotlinx.coroutines.launch
 fun EditPromoScreen(
     promo: Promo?,
     navController: NavHostController,
-    viewModel:EditPromoViewModel = hiltViewModel()
+    viewModel: EditPromoViewModel = hiltViewModel()
 ) {
     promo?.let { viewModel.setPromotion(it) }
     val context = LocalContext.current

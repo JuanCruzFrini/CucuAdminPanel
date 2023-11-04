@@ -1,90 +1,37 @@
 package com.cucu.cucuadminpanel.data.fakedatasources
 
-import com.cucu.cucuadminpanel.data.models.Product
 import com.cucu.cucuadminpanel.data.models.items.ItemCategory
 import javax.inject.Inject
 
 class FakeDataSource @Inject constructor(){
 
     private val categoriesList = listOf(
-    ItemCategory(
-        category = "Arte y artesanias",
-    ),
-    ItemCategory(
-        category = "Articulos para viajes",
-    ),
-    ItemCategory(
-        category = "Bebes",
-    ),
-    ItemCategory(
-        category = "Belleza y accesorios",
-    ),
-    ItemCategory(
-        category = "Cartucheras y carpetas",
-    ),
-    ItemCategory(
-        category = "Cotillon"
-    ),
-    ItemCategory(
-        category = "Electronica",
-    ),
-    ItemCategory(
-        category = "Embalajes y descartables",
-    ),
-    ItemCategory(
-        category = "Ferreteria",
-    ),
-    ItemCategory(
-        category = "Fitness y tiempo libre",
-    ),
-    ItemCategory(
-        category = "Higiene y limpieza",
-    ),
-    ItemCategory(
-        category = "Hogar",
-    ),
-    ItemCategory(
-        category = "Invierno",
-    ),
-    ItemCategory(
-        category = "Jugueteria",
-    ),
-    ItemCategory(
-        category = "Libreria",
-    ),
-    ItemCategory(
-        category = "Libros",
-    ),
-    ItemCategory(
-        category = "Marroquineria",
-    ),
-    ItemCategory(
-        category = "Mascotas")
-,
-    ItemCategory(
-        category = "Merceria",
-    ),
-    ItemCategory(
-        category = "Mochilas",
-    ),
-    ItemCategory(
-        category = "Navideño",
-    ),
-    ItemCategory(
-        category = "Peluches",
-    ),
-    ItemCategory(
-        category = "Simbolos patrios",
-    ),
-    ItemCategory(
-        category = "Sin definir",
-    ),
-    ItemCategory(
-        category = "Textil",
-    ),
-    ItemCategory(
-        category = "Verano y agua",
-    )
+    ItemCategory("Arte y artesanias"),
+    ItemCategory("Articulos para viajes"),
+    ItemCategory("Bebes"),
+    ItemCategory("Belleza y accesorios"),
+    ItemCategory("Cartucheras y carpetas"),
+    ItemCategory("Cotillon"),
+    ItemCategory("Electronica"),
+    ItemCategory("Embalajes y descartables"),
+    ItemCategory("Ferreteria"),
+    ItemCategory("Fitness y tiempo libre"),
+    ItemCategory("Higiene y limpieza"),
+    ItemCategory("Hogar"),
+    ItemCategory("Invierno"),
+    ItemCategory("Jugueteria"),
+    ItemCategory("Libreria"),
+    ItemCategory("Libros"),
+    ItemCategory("Marroquineria"),
+    ItemCategory("Mascotas"),
+    ItemCategory("Merceria"),
+    ItemCategory("Mochilas"),
+    ItemCategory("Navideño"),
+    ItemCategory("Peluches"),
+    ItemCategory("Simbolos patrios"),
+    ItemCategory("Sin definir"),
+    ItemCategory("Textil"),
+    ItemCategory("Verano y agua")
 )
 
     fun categoriesStringList(): List<String>{
@@ -93,7 +40,7 @@ class FakeDataSource @Inject constructor(){
         return list
     }
 
-    val productsFakeList = mutableListOf(
+    /*val productsFakeList = mutableListOf(
         Product(
             id = "1", name = "Muñeca Barbie", newPrice = 600.0, oldPrice = 1000.0, stock = 8,
             img = "https://tiotomar.vtexassets.com/arquivos/ids/217822-800-800?v=638230576794670000&width=800&height=800&aspect=true",
@@ -124,7 +71,7 @@ class FakeDataSource @Inject constructor(){
             img = "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcSYxenj8bJBGcgXoV_W_zaDG6caLaBCXw9fbcn-IDhEXM_i-m35HQQ8cGTdBhyeqkPQ6UUTV_P9hZCnqProPP46jns85P-w8_TGECxgvHYuDivNs6zvAa0xEg&usqp=CAE",
             description = "Special Forces Base Militar - Operación Rescate ¡Kit completo 12 accesorios! Juego Juguete de lujo para que los niños desarrollen la imaginación y creatividad sin limites.", code = 12345678910,  category = ItemCategory("Electronica")
         ),
-)
+)*/
 
     /*val purchasesFakeList = listOf(
     Purchase(

@@ -7,6 +7,7 @@ import com.cucu.cucuadminpanel.data.models.purchase.PurchaseReference
 import com.cucu.cucuadminpanel.data.models.purchase.PurchaseState
 import com.cucu.cucuadminpanel.data.network.ProductsDataSource
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -22,7 +23,10 @@ class SalesDataSource @Inject constructor(
     suspend fun getSales(): List<Purchase> {
         val purchases = mutableListOf<Purchase>()
 
-        val fetch = db.collection(Constants.PURCHASES_REFS_COLL).get().await()
+        val fetch = db.collection(Constants.PURCHASES_REFS_COLL)
+            .orderBy(Constants.DATE, Query.Direction.DESCENDING)
+            .get()
+            .await()
 
         fetch.documents.forEach { document ->
             val purchaseRef = document.toObject(PurchaseReference::class.java)
@@ -42,7 +46,7 @@ class SalesDataSource @Inject constructor(
             }
         }
 
-        return purchases.sortedByDescending { it.date }
+        return purchases
     }
 
     suspend fun getSaleById(purchaseRef: PurchaseReference?): Purchase {
@@ -108,7 +112,7 @@ class SalesDataSource @Inject constructor(
                     }.await()
 
                     db.collection(Constants.PRODUCTS_COLL).document(id)
-                        .update("stock", newStock).await()
+                        .update(Constants.STOCK, newStock).await()
                 }
             }
         }

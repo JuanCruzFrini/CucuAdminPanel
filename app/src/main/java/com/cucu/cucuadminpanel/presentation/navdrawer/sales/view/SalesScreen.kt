@@ -1,4 +1,4 @@
-package com.cucu.cucuadminpanel.presentation.navdrawer.sales
+package com.cucu.cucuadminpanel.presentation.navdrawer.sales.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -34,13 +35,20 @@ import com.cucu.cucuadminpanel.application.Routes
 import com.cucu.cucuadminpanel.data.models.cart.CartProduct
 import com.cucu.cucuadminpanel.data.models.purchase.Purchase
 import com.cucu.cucuadminpanel.data.models.purchase.PurchaseReference
+import com.cucu.cucuadminpanel.presentation.navdrawer.sales.viewmodel.SalesViewModel
+import com.cucu.cucuadminpanel.presentation.products.add.view.Progress
 
 @Composable
 fun SalesScreen(
     mainNavController: NavHostController,
     viewModel: SalesViewModel = hiltViewModel()
 ) {
-    viewModel.getSales()
+    val isLoading = viewModel.isLoading
+
+    Box(Modifier.fillMaxSize(), Alignment.Center) {
+        Progress(isLoading)
+    }
+
     LazyColumn {
         items(viewModel.sales){
             ItemSale(it, mainNavController)
@@ -51,7 +59,7 @@ fun SalesScreen(
 
     LazyColumn {
         items(pagingItems.itemSnapshotList.items) { purchase ->
-            ItemSale(purchase, mainNavController)
+            ItemSale(purchase!!, mainNavController)
         }
     }*/
 }

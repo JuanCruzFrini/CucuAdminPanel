@@ -1,4 +1,4 @@
-package com.cucu.cucuadminpanel.presentation.navdrawer.promos.add
+package com.cucu.cucuadminpanel.presentation.navdrawer.promos.add.viewmodel
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

@@ -1,4 +1,4 @@
-package com.cucu.cucuadminpanel.presentation.navdrawer.sales
+package com.cucu.cucuadminpanel.presentation.navdrawer.sales.viewmodel
 
 import android.util.Log
 import androidx.compose.runtime.getValue
@@ -32,11 +32,20 @@ class SalesViewModel @Inject constructor(
         pagingSourceFactory = { SalesPagingSource() }
     ).flow.cachedIn(viewModelScope)
 
+    var isLoading by mutableStateOf(false)
+
+    init {
+        getSales()
+    }
+
     fun getSales(){
         viewModelScope.launch {
+            isLoading = true
             try {
                 sales = repository.getSales()
+                isLoading = false
             } catch (e:Exception){
+                isLoading = false
                 Log.d("Error", "${e.message}")
             }
         }

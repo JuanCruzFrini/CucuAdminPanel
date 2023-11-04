@@ -1,4 +1,4 @@
-package com.cucu.cucuadminpanel.presentation.navdrawer.discounts
+package com.cucu.cucuadminpanel.presentation.navdrawer.discounts.view
 
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items

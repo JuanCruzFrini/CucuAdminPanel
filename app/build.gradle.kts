@@ -64,6 +64,7 @@ kapt {
 dependencies {
     val navVersion = "2.7.1"
     val lifecycle_version = "2.6.1"
+    //val compose_ui_version = "1.5.4"
 
     //json //Necesario para compartir objetos entre screens con compose navigation
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
@@ -90,6 +91,10 @@ dependencies {
     implementation ("com.google.dagger:hilt-android:2.45")
     kapt ("com.google.dagger:hilt-android-compiler:2.44")
     kapt ("androidx.hilt:hilt-compiler:1.0.0")
+    // For instrumented tests.
+    androidTestImplementation("com.google.dagger:hilt-android-testing:2.44")
+
+
     //para hiltViewModel()
     implementation ("androidx.hilt:hilt-navigation-compose:1.0.0")
 
@@ -127,4 +132,14 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+
+    //Mockk
+    testImplementation ("io.mockk:mockk:1.12.2")
+
+    //Para testear corrutinas
+    testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.2")
+
+    //Arch Comp
+    testImplementation ("androidx.arch.core:core-testing:2.2.0")
 }

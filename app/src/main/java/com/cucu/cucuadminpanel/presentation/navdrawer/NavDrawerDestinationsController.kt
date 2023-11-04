@@ -12,11 +12,11 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import com.cucu.cucuadminpanel.application.Routes
 import com.cucu.cucuadminpanel.data.models.promo.Promo
-import com.cucu.cucuadminpanel.presentation.navdrawer.discounts.DiscountsScreen
+import com.cucu.cucuadminpanel.presentation.navdrawer.discounts.view.DiscountsScreen
 import com.cucu.cucuadminpanel.presentation.navdrawer.products.view.ProductsScreen
 import com.cucu.cucuadminpanel.presentation.navdrawer.promos.PromosScreen
-import com.cucu.cucuadminpanel.presentation.navdrawer.sales.SalesScreen
-import com.cucu.cucuadminpanel.presentation.navdrawer.stats.StatsScreen
+import com.cucu.cucuadminpanel.presentation.navdrawer.sales.view.SalesScreen
+import com.cucu.cucuadminpanel.presentation.navdrawer.stats.view.StatsScreen
 import com.cucu.cucuadminpanel.presentation.products.detail.view.FabIcon
 import com.cucu.cucuadminpanel.presentation.products.detail.view.TopBarNavigateBack
 

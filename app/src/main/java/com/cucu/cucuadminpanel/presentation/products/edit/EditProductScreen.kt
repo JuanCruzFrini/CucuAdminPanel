@@ -39,9 +39,9 @@ import com.cucu.cucuadminpanel.R
 import com.cucu.cucuadminpanel.application.Routes
 import com.cucu.cucuadminpanel.data.models.Product
 import com.cucu.cucuadminpanel.data.models.items.ItemCategory
-import com.cucu.cucuadminpanel.presentation.products.add.Progress
-import com.cucu.cucuadminpanel.presentation.products.add.SpinnerStrings
-import com.cucu.cucuadminpanel.presentation.products.add.TextFieldCommon
+import com.cucu.cucuadminpanel.presentation.products.add.view.Progress
+import com.cucu.cucuadminpanel.presentation.products.add.view.SpinnerStrings
+import com.cucu.cucuadminpanel.presentation.products.add.view.TextFieldCommon
 import com.cucu.cucuadminpanel.presentation.products.detail.view.FabIcon
 import com.cucu.cucuadminpanel.presentation.products.detail.view.TopBarNavigateBack
 import com.cucu.cucuadminpanel.presentation.products.detail.viewmodel.ProductDetailViewModel

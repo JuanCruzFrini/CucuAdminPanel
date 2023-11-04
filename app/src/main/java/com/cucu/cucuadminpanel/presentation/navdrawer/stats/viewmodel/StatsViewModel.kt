@@ -1,4 +1,4 @@
-package com.cucu.cucuadminpanel.presentation.navdrawer.stats
+package com.cucu.cucuadminpanel.presentation.navdrawer.stats.viewmodel
 
 import android.util.Log
 import androidx.compose.runtime.getValue

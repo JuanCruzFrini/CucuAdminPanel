@@ -1,4 +1,4 @@
-package com.cucu.cucuadminpanel.presentation.navdrawer.promos.add
+package com.cucu.cucuadminpanel.presentation.navdrawer.promos.add.view
 
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -39,9 +39,10 @@ import com.cucu.cucuadminpanel.application.Routes
 import com.cucu.cucuadminpanel.data.models.cart.CartProduct
 import com.cucu.cucuadminpanel.data.models.promo.Promo
 import com.cucu.cucuadminpanel.presentation.navdrawer.promos.PromoProductsItem
-import com.cucu.cucuadminpanel.presentation.navdrawer.promos.edit.addProducts
-import com.cucu.cucuadminpanel.presentation.navdrawer.promos.edit.onItemClick
-import com.cucu.cucuadminpanel.presentation.products.add.TextFieldCommon
+import com.cucu.cucuadminpanel.presentation.navdrawer.promos.add.viewmodel.AddPromoViewModel
+import com.cucu.cucuadminpanel.presentation.navdrawer.promos.edit.view.addProducts
+import com.cucu.cucuadminpanel.presentation.navdrawer.promos.edit.view.onItemClick
+import com.cucu.cucuadminpanel.presentation.products.add.view.TextFieldCommon
 import com.cucu.cucuadminpanel.presentation.products.detail.view.FabIcon
 import com.cucu.cucuadminpanel.presentation.products.detail.view.TopBarNavigateBack
 import com.cucu.cucuadminpanel.ui.theme.Purple40
@@ -51,7 +52,7 @@ import com.cucu.cucuadminpanel.ui.theme.Purple40
 fun AddPromoScreen(
     promo:Promo?,
     navController: NavHostController,
-    viewModel:AddPromoViewModel = hiltViewModel()
+    viewModel: AddPromoViewModel = hiltViewModel()
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()

@@ -61,18 +61,6 @@ fun PromoDetail(promo: Promo?, navController: NavHostController) {
                     text = promo?.name.toString()
                 )
                 Divider(color = Purple40)
-                /*LazyVerticalGrid(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Purple40.copy(alpha = .3f))
-                        .padding(vertical = 16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    columns = GridCells.FixedSize(100.dp)){
-                    items(promo?.products ?: emptyList()){
-                        PromoProductsItem(it)
-                    }
-                }*/
                 LazyRow(
                     modifier = Modifier
                         .fillMaxWidth()

@@ -15,7 +15,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    /*private val getAllProducts: GetAllProductsUseCase,*/
     private val repository: Repository
 ) : ViewModel() {
 
@@ -24,6 +23,8 @@ class HomeViewModel @Inject constructor(
 
     private val _productsList: MutableLiveData<List<Product>> = MutableLiveData()
     val productsList: LiveData<List<Product>> = _productsList
+
+    init { getAllProducts() }
 
     fun getAllProducts(){
         viewModelScope.launch {
